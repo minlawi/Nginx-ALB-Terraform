@@ -1,7 +1,7 @@
 # VPC Configuration
 resource "aws_vpc" "nginx_vpc" {
   count                = var.create_vpc ? 1 : 0
-  cidr_block           = var.cidr_block
+  cidr_block           = var.cidr_block[0]
   enable_dns_support   = true
   enable_dns_hostnames = true
 
@@ -10,58 +10,47 @@ resource "aws_vpc" "nginx_vpc" {
   }
 }
 
-# # Subnets (Public)
-# resource "aws_subnet" "public_subnet_1" {
-#   vpc_id                  = aws_vpc.nginx_vpc.id
-#   cidr_block              = "10.0.0.0/20"
-#   map_public_ip_on_launch = true
-#   availability_zone       = "ap-southeast-1a"
+# Subnets (Public)
+resource "aws_subnet" "public_subnet" {
+  count                   = var.create_vpc ? length(data.aws_availability_zones.available.names) : 0
+  vpc_id                  = aws_vpc.nginx_vpc[0].id
+  cidr_block              = cidrsubnet(aws_vpc.nginx_vpc[0].cidr_block, 4, count.index)
+  map_public_ip_on_launch = true
+  availability_zone       = data.aws_availability_zones.available.names[count.index]
 
-#   tags = {
-#     Name = "Public-Subnet-01"
-#   }
-# }
+  tags = {
+    Name = "Public-Subnet-${count.index}"
+  }
+}
 
-# resource "aws_subnet" "public_subnet_2" {
-#   vpc_id                  = aws_vpc.nginx_vpc.id
-#   cidr_block              = "10.0.16.0/20"
-#   map_public_ip_on_launch = true
-#   availability_zone       = "ap-southeast-1b"
+# Internet Gateway
+resource "aws_internet_gateway" "igw" {
+  count  = var.create_vpc ? 1 : 0
+  vpc_id = aws_vpc.nginx_vpc[0].id
 
-#   tags = {
-#     Name = "Public-Subnet-02"
-#   }
-# }
+  tags = {
+    Name = "IGW"
+  }
+}
 
-# # Internet Gateway
-# resource "aws_internet_gateway" "igw" {
-#   vpc_id = aws_vpc.nginx_vpc.id
+# Route Table
+resource "aws_route_table" "public_rt" {
+  count  = var.create_vpc ? 1 : 0
+  vpc_id = aws_vpc.nginx_vpc[0].id
+  tags = {
+    Name = "Public-Route-Table"
+  }
+}
 
-#   tags = {
-#     Name = "Internet-Gateway"
-#   }
-# }
+resource "aws_route" "default_route" {
+  count                  = var.create_vpc ? 1 : 0
+  route_table_id         = aws_route_table.public_rt[0].id
+  destination_cidr_block = local.anywhere
+  gateway_id             = aws_internet_gateway.igw[0].id
+}
 
-# # Route Table
-# resource "aws_route_table" "public_rt" {
-#   vpc_id = aws_vpc.nginx_vpc.id
-#   tags = {
-#     Name = "Public-Route-Table"
-#   }
-# }
-
-# resource "aws_route" "default_route" {
-#   route_table_id         = aws_route_table.public_rt.id
-#   destination_cidr_block = local.anywhere
-#   gateway_id             = aws_internet_gateway.igw.id
-# }
-
-# resource "aws_route_table_association" "public_assoc_1" {
-#   subnet_id      = aws_subnet.public_subnet_1.id
-#   route_table_id = aws_route_table.public_rt.id
-# }
-
-# resource "aws_route_table_association" "public_assoc_2" {
-#   subnet_id      = aws_subnet.public_subnet_2.id
-#   route_table_id = aws_route_table.public_rt.id
-# }
+resource "aws_route_table_association" "public_association" {
+  count          = var.create_vpc ? length(aws_subnet.public_subnet) : 0
+  subnet_id      = aws_subnet.public_subnet[count.index].id
+  route_table_id = aws_route_table.public_rt[0].id
+}
