@@ -1,8 +1,10 @@
 locals {
-  anywhere     = "0.0.0.0/0"
-  http         = 80
-  tcp_protocol = "tcp"
-  all_ports    = -1
+  anywhere        = "0.0.0.0/0"
+  http            = 80
+  tcp_protocol    = "tcp"
+  all_ports       = -1
+  ssh             = 22
+  server_t2_micro = "t2.micro"
 }
 
 resource "aws_security_group" "web_sg" {
@@ -17,6 +19,14 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   to_port           = local.http
   ip_protocol       = local.tcp_protocol
 }
+
+# resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+#   security_group_id = aws_security_group.web_sg.id
+#   cidr_ipv4         = local.anywhere
+#   from_port         = local.ssh
+#   to_port           = local.ssh
+#   ip_protocol       = local.tcp_protocol
+# }
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic" {
   security_group_id = aws_security_group.web_sg.id
