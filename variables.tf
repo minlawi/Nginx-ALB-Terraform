@@ -1,7 +1,7 @@
 variable "create_vpc" {
   description = "Create a new VPC"
   type        = bool
-  default     = true
+  default     = false
 }
 
 variable "cidr_block" {
