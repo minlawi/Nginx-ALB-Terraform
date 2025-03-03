@@ -9,9 +9,3 @@ variable "cidr_block" {
   type        = list(string)
   default     = []
 }
-
-variable "create_ec2" {
-  description = "Count to create EC2 instances"
-  type        = bool
-  default     = false
-}

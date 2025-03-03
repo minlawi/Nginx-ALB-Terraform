@@ -1,3 +1,3 @@
-# output "alb_dns_name" {
-#   value = aws_alb.app_lb.dns_name
-# }
+output "alb_dns_name" {
+  value = var.create_vpc ? aws_alb.app_lb[0].dns_name : null
+}
