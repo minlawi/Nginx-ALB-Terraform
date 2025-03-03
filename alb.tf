@@ -26,3 +26,14 @@ resource "aws_lb_target_group_attachment" "tg_attachment" {
   target_id        = each.value
   port             = 80
 }
+
+resource "aws_lb_listener" "listener" {
+  load_balancer_arn = aws_alb.app_lb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.app_tg.arn
+  }
+}
