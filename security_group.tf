@@ -1,12 +1,3 @@
-locals {
-  anywhere        = "0.0.0.0/0"
-  http            = 80
-  tcp_protocol    = "tcp"
-  all_ports       = -1
-  ssh             = 22
-  server_t2_micro = "t2.micro"
-}
-
 resource "aws_security_group" "web_sg" {
   vpc_id = aws_vpc.nginx_vpc.id
   name   = "web_sg"
