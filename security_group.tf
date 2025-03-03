@@ -13,13 +13,14 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   ip_protocol       = local.tcp_protocol
 }
 
-# # resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
-# #   security_group_id = aws_security_group.web_sg.id
-# #   cidr_ipv4         = local.anywhere
-# #   from_port         = local.ssh
-# #   to_port           = local.ssh
-# #   ip_protocol       = local.tcp_protocol
-# # }
+# resource "aws_vpc_security_group_ingress_rule" "allow_ssh" {
+#   count             = var.create_vpc ? 1 : 0
+#   security_group_id = aws_security_group.web_sg[0].id
+#   cidr_ipv4         = local.anywhere
+#   from_port         = local.ssh
+#   to_port           = local.ssh
+#   ip_protocol       = local.tcp_protocol
+# }
 
 resource "aws_vpc_security_group_egress_rule" "allow_all_traffic" {
   count             = var.create_vpc ? 1 : 0
