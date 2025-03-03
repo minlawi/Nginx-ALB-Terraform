@@ -8,3 +8,14 @@ resource "aws_alb" "app_lb" {
     name = "nginx-alb"
   }
 }
+
+resource "aws_lb_target_group" "app_tg" {
+  name        = "nginx-tg"
+  port        = 80
+  protocol    = "HTTP"
+  vpc_id      = aws_vpc.nginx_vpc.id
+  target_type = "instance"
+  tags = {
+    name = "nginx-tg"
+  }
+}
