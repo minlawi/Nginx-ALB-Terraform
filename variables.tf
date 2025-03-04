@@ -1,3 +1,9 @@
+variable "profile" {
+  description = "AWS profile"
+  type        = string
+  default     = ""
+}
+
 variable "create_vpc" {
   description = "Create a new VPC"
   type        = bool
