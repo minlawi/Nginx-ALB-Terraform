@@ -8,8 +8,8 @@ resource "aws_vpc_security_group_ingress_rule" "allow_http" {
   count             = var.create_vpc ? 1 : 0
   security_group_id = aws_security_group.web_sg[0].id
   cidr_ipv4         = local.anywhere
-  from_port         = local.http
-  to_port           = local.http
+  from_port         = local.http_port
+  to_port           = local.http_port
   ip_protocol       = local.tcp_protocol
 }
 
