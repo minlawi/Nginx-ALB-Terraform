@@ -11,9 +11,9 @@ resource "aws_instance" "nginx_instances" {
   tags = {
     Name = "Nginx-Server-${count.index}"
   }
-  # lifecycle {
-  #   ignore_changes = [
-  #     security_groups
-  #   ]
-  # }
+  lifecycle {
+    ignore_changes = [
+      security_groups
+    ]
+  }
 }
