@@ -1,4 +1,4 @@
 # Setup Nginx-Webserver Loadbalancing on AWS
 
 # System Architecture Workflow
-![image alt](https://github.com/minlawi/Nginx-ALB-Terraform/blob/66f2047fe1e4703e8c0a5d8b585005dbd456f5ab/nginx-alb-workflow.png)
+![image alt](https://github.com/minlawi/Nginx-ALB-Terraform/blob/97b2e44acb67d4f0b8254a499342bc3f32418cc7/nginx-alb-workflow.png)
