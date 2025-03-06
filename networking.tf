@@ -33,7 +33,7 @@ resource "aws_internet_gateway" "igw" {
   }
 }
 
-# Route Table
+# Route Table for Public Subnet
 resource "aws_route_table" "public_rt" {
   count  = var.create_vpc ? 1 : 0
   vpc_id = aws_vpc.nginx_vpc[0].id
@@ -42,13 +42,15 @@ resource "aws_route_table" "public_rt" {
   }
 }
 
-resource "aws_route" "default_route" {
+# Add default route to Public Route Table
+resource "aws_route" "default_route_public_rt" {
   count                  = var.create_vpc ? 1 : 0
   route_table_id         = aws_route_table.public_rt[0].id
   destination_cidr_block = local.anywhere
   gateway_id             = aws_internet_gateway.igw[0].id
 }
 
+# Associate Public Route Table with Public Subnet
 resource "aws_route_table_association" "public_association" {
   count          = var.create_vpc ? length(aws_subnet.public_subnet) : 0
   subnet_id      = aws_subnet.public_subnet[count.index].id
