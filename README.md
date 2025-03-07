@@ -12,3 +12,5 @@
  * AWS EC2, ALB (Internet-facing) type
  * VPC, Subnets, Security Groups, IGW
  * Bash Scriptiing (User data for EC2 setup)
+
+# Disclaimer: This content is for educational purposes only and should not be used in a production environment.
