@@ -6,7 +6,7 @@ resource "aws_instance" "nginx_instances" {
   availability_zone           = data.aws_availability_zones.available.names[count.index]
   associate_public_ip_address = true
   security_groups             = [aws_security_group.web_sg[0].id]
-  user_data                   = file("${path.root}/config/nginx-install.sh")
+  user_data                   = file("${path.root}/scripts/nginx-install.sh")
   user_data_replace_on_change = true
   tags = {
     Name = "Nginx-Server-${count.index}"
